@@ -6,18 +6,24 @@ const getBackendUrl = () => {
   console.log("🌐 Current hostname:", frontendHostname);
   console.log("🌐 Current protocol:", frontendProtocol);
 
-  // Use REACT_APP_API_URL only if set and not pointing to frontend's hostname/port
-  if (
-    process.env.REACT_APP_API_URL &&
-    !process.env.REACT_APP_API_URL.includes(frontendHostname)
-  ) {
-    console.log("🔗 Using backend URL from ENV:", process.env.REACT_APP_API_URL);
-    return process.env.REACT_APP_API_URL;
+  if (process.env.REACT_APP_API_URL) {
+    let backendUrl = process.env.REACT_APP_API_URL;
+    if (!backendUrl.endsWith("/api")) {
+      backendUrl = backendUrl.replace(/\/$/, "") + "/api";
+    }
+    if (backendUrl.includes(frontendHostname)) {
+      console.warn(
+        "⚠️ Backend URL matches frontend hostname. This may be expected in production, but ensure backend is running on correct port."
+      );
+    }
+    console.log("🔗 Using backend URL from ENV:", backendUrl);
+    return backendUrl;
   }
 
-  // fallback only for local development
-  console.log("🔗 Using fallback local backend URL: http://localhost:5002/api");
-  return "http://localhost:5002/api";
+  // Use Render backend as default fallback
+  const renderBackend = "https://evion.onrender.com/api";
+  console.log("🔗 Using fallback Render backend URL:", renderBackend);
+  return renderBackend;
 };
 
 const baseURL = getBackendUrl();

@@ -6,11 +6,26 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(cors({
-  origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://192.168.56.1:3000', 'http://192.168.181.1:3000', 'http://localhost:3001'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true
-}));
+if (process.env.NODE_ENV === "production") {
+  app.use(cors({
+    origin: true, // allow all origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true
+  }));
+} else {
+  app.use(cors({
+    origin: [
+      'http://localhost:3000',
+      'http://127.0.0.1:3000',
+      'http://192.168.56.1:3000',
+      'http://192.168.181.1:3000',
+      'http://localhost:3001',
+      'https://evion.onrender.com'
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true
+  }));
+}
 app.use(express.json());
 
 // MongoDB connection options
@@ -62,4 +77,4 @@ app.use('/api/charging-stations', require('./routes/chargingStations'));
 const PORT = process.env.PORT || 5002;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT} and listening on all interfaces`);
-}); 
+});
