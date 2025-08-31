@@ -17,8 +17,7 @@ console.log('✅ Server Started Successfully');
 
 // ✅ Enable CORS for frontend origins
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://192.168.56.1:3000', 'http://192.168.181.1:3000', 'http://localhost:3001'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  origin: 'https://evion-frontend-aml7.onrender.com',
   credentials: true
 }));
 
@@ -49,4 +48,5 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server is running on port ${PORT} and listening on all interfaces`);
 });
 
+module.exports = app;
 module.exports = app;
