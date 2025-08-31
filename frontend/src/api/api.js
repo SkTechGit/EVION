@@ -1,29 +1,17 @@
-import axios from 'axios';
+import axios from "axios";
 
-// Function to get the current backend URL
+// Decide backend URL based on environment
 const getBackendUrl = () => {
-  try {
-    if (typeof window !== 'undefined' && window.location.hostname) {
-      const hostname = window.location.hostname;
-
-      // 👉 If running locally, use localhost backend
-      if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        return 'http://localhost:5002';
-      }
-
-      // 👉 Otherwise, use deployed backend (Render)
-      return 'https://evion.onrender.com';
-    }
-  } catch (error) {
-    console.log('Could not determine hostname, using default');
+  if (process.env.REACT_APP_API_URL) {
+    return process.env.REACT_APP_API_URL;
   }
-  
-  // Fallback (local dev)
-  return 'http://localhost:5002';
+
+  // Default to local backend in dev
+  return "http://localhost:5002/api";
 };
 
 const api = axios.create({
-  baseURL: `${getBackendUrl()}/api`,
+  baseURL: getBackendUrl(),
 });
 
 export default api;
