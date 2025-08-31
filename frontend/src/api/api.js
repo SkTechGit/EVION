@@ -1,12 +1,13 @@
 import axios from "axios";
 
-// Decide backend URL based on environment
+// Always prefer environment variable
 const getBackendUrl = () => {
   if (process.env.REACT_APP_API_URL) {
+    console.log("🔗 Using backend URL from ENV:", process.env.REACT_APP_API_URL);
     return process.env.REACT_APP_API_URL;
   }
 
-  // Default to local backend in dev
+  // Default fallback for local development
   return "http://localhost:5002/api";
 };
 
