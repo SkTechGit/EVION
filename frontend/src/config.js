@@ -1,7 +1,8 @@
-// Function to get the backend URL based on current environment
+import axios from "axios";
+import config from "./config";
 
-const config = {
-  apiUrl: process.env.REACT_APP_API_URL || 'http://localhost:5002',
-};
+const api = axios.create({
+  baseURL: config.apiUrl,
+});
 
-export default config;
+export default api;
