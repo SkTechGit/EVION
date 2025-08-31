@@ -1,8 +1,5 @@
-import axios from "axios";
-import config from "./config";
+const config = {
+  apiUrl: process.env.REACT_APP_API_URL || "http://localhost:5002/api",
+};
 
-const api = axios.create({
-  baseURL: config.apiUrl,
-});
-
-export default api;
+export default config;
