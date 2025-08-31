@@ -15,9 +15,27 @@ const app = express();
 // ✅ Log when the server file is loaded
 console.log('✅ Server Started Successfully');
 
-// ✅ Enable CORS for frontend origins
+// ✅ Allowed Origins (Frontend URLs)
+const allowedOrigins = [
+  "https://evion-frontend-aml7.onrender.com", // deployed frontend
+  "http://localhost:3000",                   // local dev
+  "http://127.0.0.1:3000",                   // alt localhost
+  "http://192.168.181.1:3000"                // LAN mobile testing
+];
+
+// ✅ Enable CORS dynamically
 app.use(cors({
-  origin: 'https://evion-frontend-aml7.onrender.com',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like Postman, curl, mobile apps)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      console.error("❌ Blocked by CORS:", origin);
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
 }));
 
@@ -42,11 +60,15 @@ mongoose.connect(MONGO_URI)
 app.use('/api/auth', authRoutes);
 app.use('/api/charging-stations', chargingStationRoutes);
 
+// ✅ Health Check Route (for Render debugging)
+app.get('/api/test', (req, res) => {
+  res.json({ message: "✅ Backend is running fine!" });
+});
+
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server is running on port ${PORT} and listening on all interfaces`);
 });
 
-module.exports = app;
 module.exports = app;

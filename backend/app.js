@@ -8,7 +8,13 @@ const app = express();
 // Middleware
 if (process.env.NODE_ENV === "production") {
   app.use(cors({
-    origin: true, // allow all origins
+    origin: [
+      'https://evion-frontend-aml7.onrender.com',
+      'https://evion.onrender.com',
+      'http://localhost:3000',
+      "http://127.0.0.1:3000",                    // local dev alternative
+      "http://192.168.181.1:3000" 
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
   }));
@@ -42,7 +48,10 @@ const mongooseOptions = {
 // MongoDB connection with retry logic
 const connectWithRetry = () => {
   console.log('Attempting MongoDB connection...');
-  mongoose.connect(process.env.MONGODB_URL, mongooseOptions)
+  mongoose.connect(
+    process.env.MONGODB_URL || 'mongodb://localhost:27017/ev_finder',
+    mongooseOptions
+  )
     .then(() => {
       console.log('Successfully connected to MongoDB');
     })
@@ -75,6 +84,6 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/charging-stations', require('./routes/chargingStations'));
 
 const PORT = process.env.PORT || 5002;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server is running on port ${PORT} and listening on all interfaces`);
+app.listen(PORT, 'localhost', () => {
+  console.log(`Server is running on port ${PORT} and listening on localhost`);
 });

@@ -1,17 +1,33 @@
 import axios from "axios";
 
-const getBackendUrl = () => {
-  // Ignore REACT_APP_API_URL and always use Render backend
-  const renderBackend = "https://evion.onrender.com/api";
-  console.log("🔗 Using Render backend URL:", renderBackend);
-  return renderBackend;
-};
+// ✅ Backend URL on Render
+const BACKEND_URL = "https://evion.onrender.com";
 
-const baseURL = getBackendUrl();
-console.log("🔗 Creating API instance with baseURL:", baseURL);
+console.log("🔗 Using backend URL:", BACKEND_URL);
 
 const api = axios.create({
-  baseURL,
+  baseURL: `${BACKEND_URL}/api`,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-export default api;
+// Example login function
+export const login = async (email, password) => {
+  try {
+    console.log("🔐 Attempting login for:", email);
+    const response = await api.post("/auth/login", { email, password });
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      console.error("❌ API Error:", error.response.data);
+      throw new Error(error.response.data.error || "Login failed");
+    } else if (error.request) {
+      console.error("🌐 Network error - Backend might be down:", BACKEND_URL);
+      throw new Error("Network error occurred");
+    } else {
+      console.error("⚠️ Other error:", error.message);
+      throw new Error("Login failed - please try again");
+    }
+  }
+};

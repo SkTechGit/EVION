@@ -1,5 +1,5 @@
 const getApiUrl = () => {
-  let url = process.env.REACT_APP_API_URL || "https://evion.onrender.com/api";
+  let url = process.env.REACT_APP_API_URL || "https://evion.onrender.com";
   if (!url.endsWith("/api")) {
     url = url.replace(/\/$/, "") + "/api";
   }
