@@ -1,13 +1,10 @@
-const getApiUrl = () => {
-  let url = process.env.REACT_APP_API_URL || "https://evion.onrender.com";
-  if (!url.endsWith("/api")) {
-    url = url.replace(/\/$/, "") + "/api";
-  }
-  return url;
-};
+// src/config.js
 
-const config = {
-  apiUrl: getApiUrl(),
-};
+// Use environment variable if available, otherwise fallback
+export const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL ||
+  (window.location.hostname === "localhost"
+    ? "http://localhost:5002"
+    : "https://evion.onrender.com");
 
-export default config;
+console.log("🌐 API_BASE_URL ->", API_BASE_URL);
